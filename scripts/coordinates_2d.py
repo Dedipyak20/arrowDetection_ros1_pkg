@@ -12,7 +12,10 @@ import sys
 from arrow_detection.msg import ArrowDetection2D
 
 # Add YOLOv5 to path
-YOLOV5_PATH = "/home/external_repos/yolov5"
+YOLOV5_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../yolov5")
+if not os.path.exists(YOLOV5_PATH):
+    rospy.logerr(f"YOLOv5 directory not found at {YOLOV5_PATH}. Please follow the setup instructions in the README.")
+    sys.exit(1)
 if YOLOV5_PATH not in sys.path:
     sys.path.append(YOLOV5_PATH)
 
@@ -25,7 +28,7 @@ class ArrowDetection2DNode:
         rospy.init_node('coordinates_2d')
        
         # Initialize parameters
-        self.weights = rospy.get_param('~weights_path', '/home/external_repos/yolov5/bestweight.pt')
+        self.weights = rospy.get_param('~weights_path', '$(find arrowDetection_ros1_pkg)/bestweight.pt')
         self.img_size = rospy.get_param('~img_size', 640)
         self.conf_thres = rospy.get_param('~conf_thres', 0.25)
         self.iou_thres = rospy.get_param('~iou_thres', 0.45)
