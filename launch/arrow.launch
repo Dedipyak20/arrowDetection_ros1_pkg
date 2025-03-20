@@ -1,0 +1,32 @@
+<launch>
+    <!-- Launch RealSense Camera -->
+    <include file="$(find realsense2_camera)/launch/rs_camera.launch">
+        <arg name="enable_depth" value="true"/>
+        <arg name="color_width" value="640"/>
+        <arg name="color_height" value="480"/>
+        <arg name="depth_width" value="640"/>
+        <arg name="depth_height" value="480"/>
+        <arg name="color_fps" value="30"/>
+        <arg name="depth_fps" value="30"/>
+        <arg name="align_depth" value="true"/>
+    </include>
+
+    <!-- 2D Arrow Detection Node -->
+    <node name="coordinates_2d"
+          pkg="arrow_detection"
+          type="coordinates_2d.py"
+          output="screen">
+        <param name="weights_path" value="/home/external_repos/yolov5/bestweight.pt"/>
+        <param name="img_size" value="640"/>
+        <param name="conf_thres" value="0.25"/>
+        <param name="iou_thres" value="0.45"/>
+        <param name="device" value=""/>
+    </node>
+
+    <!-- 3D Coordinate Calculator Node -->
+    <node name="coordinates_3d"
+          pkg="arrow_detection"
+          type="coordinates_3d.py"
+          output="screen">
+    </node>
+</launch>
